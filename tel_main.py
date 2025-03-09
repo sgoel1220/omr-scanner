@@ -5,8 +5,10 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 from PIL import Image
 import logging
-from find_marked_omr import find_score_for_imr
 
+from final_score_calculator import get_possible_question_paper_ids
+from find_marked_omr import find_score_for_imr
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 
@@ -24,18 +26,18 @@ user_qpid = {}
 
 
 # Command to set Question Paper ID
-async def set_qpid(update: Update, context: CallbackContext):
-    user_id = update.message.chat_id
-
-    if not context.args:
-        await update.message.reply_text("Usage: /set_question_paper_id <question_paper_id>")
-        logging.warning(f"User {user_id} tried to set QPID without an argument.")
-        return
-
-    qpid = context.args[0]
-    user_qpid[user_id] = qpid
-    logging.info(f"User {user_id} set Question Paper ID to {qpid}.")
-    await update.message.reply_text(f"✅ Question Paper ID set to: {qpid}\nNow send an OMR image.")
+# async def set_qpid(update: Update, context: CallbackContext):
+#     user_id = update.message.chat_id
+#
+#     if not context.args:
+#         await update.message.reply_text("Usage: /set_question_paper_id <question_paper_id>")
+#         logging.warning(f"User {user_id} tried to set QPID without an argument.")
+#         return
+#
+#     qpid = context.args[0]
+#     user_qpid[user_id] = qpid
+#     logging.info(f"User {user_id} set Question Paper ID to {qpid}.")
+#     await update.message.reply_text(f"✅ Question Paper ID set to: {qpid}\nNow send an OMR image.")
 
 
 def format_score_response(total_score, ans_matching):
@@ -70,6 +72,34 @@ def format_score_response(total_score, ans_matching):
     message += "\n💪 Keep practicing!"
 
     return message, ans_details
+
+
+
+async def set_qpid(update: Update, context: CallbackContext):
+    user_id = update.message.chat_id
+    QUESTION_PAPER_IDS = get_possible_question_paper_ids()
+    keyboard = [
+        [InlineKeyboardButton(qpid, callback_data=f"set_qpid_{qpid}")]
+        for qpid in QUESTION_PAPER_IDS
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await update.message.reply_text(
+        "📄 Please select a Question Paper ID from the list below:",
+        reply_markup=reply_markup
+    )
+
+async def button_click(update: Update, context: CallbackContext):
+    query = update.callback_query
+    await query.answer()
+
+    user_id = query.message.chat_id
+    selected_qpid = query.data.replace("set_qpid_", "")
+    user_qpid[user_id] = selected_qpid
+
+    logging.info(f"User {user_id} set Question Paper ID to {selected_qpid}.")
+    await query.edit_message_text(f"✅ Question Paper ID set to: {selected_qpid}\nNow send an OMR image.")
+
 
 # Handler for OMR images
 async def handle_image(update: Update, context: CallbackContext):
@@ -111,6 +141,7 @@ def main():
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("set_question_paper_id", set_qpid))
     app.add_handler(MessageHandler(filters.PHOTO, handle_image))
+    app.add_handler(telegram.ext.CallbackQueryHandler(button_click))  # Handle button clicks
     logging.info("Bot is running and waiting for commands...")
     app.run_polling()
 

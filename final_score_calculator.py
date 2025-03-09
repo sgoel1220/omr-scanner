@@ -24,6 +24,19 @@ def get_question_ans_mapping(question_paper_id):
         return None
 
 
+def get_possible_question_paper_ids():
+    """Fetch data from a specific Google Sheet."""
+    try:
+        url  =f"{ANSWER_BANK_URL}?action=SHEETS"
+        print(url)
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an error for bad responses (4xx, 5xx)
+        return response.json()  # Convert JSON response to Python dictionary
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        return None
+
 def cal_score(marked_options, ans_key, right_mark=1, wrong_mark=0):
     total = 0
     marked_options = [""] + marked_options
