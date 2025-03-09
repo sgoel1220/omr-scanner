@@ -77,7 +77,7 @@ async def handle_image(update: Update, context: CallbackContext):
     user_id = update.message.chat_id
 
     if user_id not in user_qpid:
-        await update.message.reply_text("⚠️ Please set the Question Paper ID first using /setquestionpaper <id>")
+        await update.message.reply_text("⚠️ Please set the Question Paper ID first using /set_question_paper_id <id>")
         logging.warning(f"User {user_id} tried to upload an OMR image without setting QPID.")
         return
     qpid = user_qpid[user_id]
@@ -109,7 +109,7 @@ def main():
 
     logging.info("Bot is starting...")
     app = Application.builder().token(TOKEN).build()
-    app.add_handler(CommandHandler("setquestionpaper", set_qpid))
+    app.add_handler(CommandHandler("set_question_paper_id", set_qpid))
     app.add_handler(MessageHandler(filters.PHOTO, handle_image))
     logging.info("Bot is running and waiting for commands...")
     app.run_polling()
