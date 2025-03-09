@@ -1,14 +1,14 @@
 import os
 import cv2
 import numpy as np
-from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext, CallbackQueryHandler
 from PIL import Image
 import logging
 
 from final_score_calculator import get_possible_question_paper_ids
 from find_marked_omr import find_score_for_imr
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
 
 
 
@@ -46,6 +46,7 @@ def format_score_response(total_score, ans_matching):
 
     wrong_count = 0
     blank_count = 0
+    correct_count = 0
 
     for key, ans in ans_matching.items():
         type_of_ans, _ , _ = ans
@@ -53,22 +54,26 @@ def format_score_response(total_score, ans_matching):
             wrong_count += 1
         if type_of_ans == "BLANK":
             blank_count += 1
+        if type_of_ans == "CORRECT":
+            correct_count += 1
 
     # wrong_count = sum(1 for ans in ans_matching if ans_matching[ans][0] == "WRONG")
     # blank_count = sum(1 for ans in ans_matching if ans_matching[ans][0] == "BLANK")
+    # Show detailed results including correct, incorrect, and blank answers
+    ans_details = "📊 Detailed Results\n"
+    ans_details += f"{'Q No':<5} | {'Status':<7} | {'Marked':<6} | {'Expected':<8}\n"
+    ans_details += "-" * 36 + "\n"
 
-    # Show only incorrect and blank answers
-    ans_details = "📊  Detailed Results\n"
     for q_no, (status, marked, actual) in ans_matching.items():
         if status == "CORRECT":
-            ans_details += f"✔️ *Q{q_no }:* Correct! 🎉\n"
-        if status == "WRONG":
-            ans_details += f"❌ *Q{q_no }* → {marked.upper()} (✔ {actual.upper()})\n"
+            ans_details += f"Q{q_no:<5} | {'✅':<7} | {marked.upper():<6} | {actual.upper():<8}\n"
+        elif status == "WRONG":
+            ans_details += f"Q{q_no:<5} | {'❌':<7} | {marked.upper():<6} | {actual.upper():<8}\n"
         elif status == "BLANK":
-            ans_details += f"⚪ *Q{q_no }* → -- (✔ {actual.upper()})\n"
-    # print(ans_matching.values())
+            ans_details += f"Q{q_no:<5} | {'⚪':<7} | {'':<6} | {actual.upper():<8}\n"
 
-    message += f"\n📌 *Summary:* ❌ {wrong_count} wrong | ⚪ {blank_count} not attempted"
+    message += ans_details
+    message += f"\n📌 Summary: \n✅ {correct_count} correct \n❌ {wrong_count} wrong \n⚪ {blank_count} not attempted"
     message += "\n💪 Keep practicing!"
 
     return message, ans_details
@@ -141,7 +146,7 @@ def main():
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("set_question_paper_id", set_qpid))
     app.add_handler(MessageHandler(filters.PHOTO, handle_image))
-    app.add_handler(telegram.ext.CallbackQueryHandler(button_click))  # Handle button clicks
+    app.add_handler(CallbackQueryHandler(button_click))  # Handle button clicks
     logging.info("Bot is running and waiting for commands...")
     app.run_polling()
 

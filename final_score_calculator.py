@@ -39,7 +39,7 @@ def get_possible_question_paper_ids():
 
 def cal_score(marked_options, ans_key, right_mark=1, wrong_mark=0):
     total = 0
-    marked_options = [""] + marked_options
+    # marked_options = [""] + marked_options
     ans_matching = {} #question: (was_correct, blank, was_wrong), marked ans, actual ans
     for i in range(1, len(marked_options)):
         if not i in ans_key:
