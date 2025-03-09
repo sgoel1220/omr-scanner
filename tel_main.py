@@ -80,7 +80,7 @@ async def handle_image(update: Update, context: CallbackContext):
         await update.message.reply_text("⚠️ Please set the Question Paper ID first using /setquestionpaper <id>")
         logging.warning(f"User {user_id} tried to upload an OMR image without setting QPID.")
         return
-    qpid = [user_id]
+    qpid = user_qpid[user_id]
     file = await update.message.photo[-1].get_file()
     file_path = f"omr_{user_id}.jpg"
     await file.download_to_drive(file_path)
