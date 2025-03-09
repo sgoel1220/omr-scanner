@@ -28,7 +28,7 @@ async def set_qpid(update: Update, context: CallbackContext):
     user_id = update.message.chat_id
 
     if not context.args:
-        await update.message.reply_text("Usage: /set_qpid <question_paper_id>")
+        await update.message.reply_text("Usage: /set_question_paper_id <question_paper_id>")
         logging.warning(f"User {user_id} tried to set QPID without an argument.")
         return
 
