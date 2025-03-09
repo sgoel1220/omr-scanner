@@ -53,7 +53,7 @@ def detect_marked_circles(circles, image, current_running_option="a",
             cv2.circle(image, (int(x), int(y)), int(r), (0, 255, 0), 2)  # Draw in black
 
             cv2.putText(image, current_running_option, (x, y), cv2.FONT_HERSHEY_SIMPLEX,
-                        0.5, (0, 0, 255), 1, cv2.LINE_AA)
+                        0.5, (255, 0, 255), 1, cv2.LINE_AA)
 
 
     # print("marked", marked_circles)
