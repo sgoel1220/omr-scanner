@@ -50,7 +50,6 @@ def format_score_response(total_score, ans_matching):
         if type_of_ans == "WRONG":
             wrong_count += 1
         if type_of_ans == "BLANK":
-            print(key, ans)
             blank_count += 1
 
     # wrong_count = sum(1 for ans in ans_matching if ans_matching[ans][0] == "WRONG")
@@ -80,10 +79,8 @@ async def handle_image(update: Update, context: CallbackContext):
     if user_id not in user_qpid:
         await update.message.reply_text("⚠️ Please set the Question Paper ID first using /set_qpid <id>")
         logging.warning(f"User {user_id} tried to upload an OMR image without setting QPID.")
-        # return
-        qpid = "V4703"
-    else:
-        qpid = user_qpid[user_id]
+        return
+    qpid = [user_id]
     file = await update.message.photo[-1].get_file()
     file_path = f"omr_{user_id}.jpg"
     await file.download_to_drive(file_path)
@@ -93,7 +90,7 @@ async def handle_image(update: Update, context: CallbackContext):
     logging.info(f"User {user_id} uploaded an OMR image. Saved as {file_path}. Processing...")
 
     try:
-        await update.message.reply_text(f"✅ Processing your OMR sheet please wait...")
+        await update.message.reply_text(f"✅ Processing your OMR sheet for question paper {qpid} please wait...")
         score, answer_matching = find_score_for_imr(abs_file_path, template_for_questions, template_for_omr, question_paper_id=qpid)
         summary, ans_details = format_score_response(score, answer_matching)
         logging.info(f"User {user_id} got a score of {score} for QPID {qpid}.")

@@ -27,7 +27,7 @@ def find_score_for_imr(input_file_path, template_for_question, template_for_omr,
     marked_options = get_marked_options(option_marked_arr, cropped_with_question.copy())
 
     final_score, ans_matching = cal_score(marked_options, get_question_ans_mapping(question_paper_id))
-    print(final_score)
+    # print(final_score)
 
     return final_score, ans_matching
 

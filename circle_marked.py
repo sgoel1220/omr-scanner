@@ -56,8 +56,8 @@ def detect_marked_circles(circles, image, current_running_option="a",
                         0.5, (0, 0, 255), 1, cv2.LINE_AA)
 
 
-    print("marked", marked_circles)
-    print("marked", len(marked_circles))
+    # print("marked", marked_circles)
+    # print("marked", len(marked_circles))
     # Save output image
     cv2.imwrite(output_path, image)
 

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/final_code.iml" filepath="$PROJECT_DIR$/.idea/final_code.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/omr-scanner.iml" filepath="$PROJECT_DIR$/.idea/omr-scanner.iml" />
     </modules>
   </component>
 </project>
