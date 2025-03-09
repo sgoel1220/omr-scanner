@@ -72,7 +72,7 @@ def format_score_response(total_score, ans_matching):
         elif status == "BLANK":
             ans_details += f"Q{q_no:<5} | {'⚪':<7} | {'':<6} | {actual.upper():<8}\n"
 
-    message += ans_details
+
     message += f"\n📌 Summary: \n✅ {correct_count} correct \n❌ {wrong_count} wrong \n⚪ {blank_count} not attempted"
     message += "\n💪 Keep practicing!"
 
