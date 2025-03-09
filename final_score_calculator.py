@@ -3,7 +3,7 @@ import collections
 import requests
 import requests
 
-from final_code.constants import ANSWER_BANK_URL
+from constants import ANSWER_BANK_URL
 
 def get_question_ans_mapping(question_paper_id):
     """Fetch data from a specific Google Sheet."""

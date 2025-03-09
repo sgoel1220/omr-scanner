@@ -2,11 +2,11 @@ from typing import List
 
 import cv2
 import pprint
-from final_code.add_missing_data import add_missing_circles
-from final_code.circle_marked import transform_to_option_arr, get_marked_options
-from final_code.circle_omr_options import cluster_circles
-from final_code.final_score_calculator import cal_score, get_question_ans_mapping
-from final_code.similarity_resize import crop_matching_region
+from add_missing_data import add_missing_circles
+from circle_marked import transform_to_option_arr, get_marked_options
+from circle_omr_options import cluster_circles
+from final_score_calculator import cal_score, get_question_ans_mapping
+from similarity_resize import crop_matching_region
 # template_for_question = cv2.imread(r"C:\Users\shubh\Desktop\startup_ideas\omr_final_self\final_code\templates\template_for_questions.jpeg")
 # template_for_omr = cv2.imread(r"C:\Users\shubh\Desktop\startup_ideas\omr_final_self\final_code\templates\template_for_whole_omr.jpeg")
 

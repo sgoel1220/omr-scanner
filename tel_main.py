@@ -5,7 +5,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 from PIL import Image
 import logging
-from final_code.find_marked_omr import find_score_for_imr
+from find_marked_omr import find_score_for_imr
 
 
 
@@ -119,6 +119,6 @@ def main():
 
 
 if __name__ == "__main__":
-    template_for_questions = cv2.imread("../templates/template_for_questions.jpeg")
-    template_for_omr = cv2.imread("../templates/template_for_whole_omr.jpeg")
+    template_for_questions = cv2.imread("./templates/template_for_questions.jpeg")
+    template_for_omr = cv2.imread("./templates/template_for_whole_omr.jpeg")
     main()
